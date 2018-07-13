@@ -1,0 +1,209 @@
+
+<html>
+<head>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+
+	<style type="text/css">
+    body {
+        font-family: Helvetica;
+        font-size: 9pt;
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin:80px 40px;
+        
+        
+    }
+
+   
+    
+    div.HashtagSearch {
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        padding: 10px 40px 10px;
+        margin: 0;
+        background-color: #f3f3ff;
+    }
+
+    div.form {
+    	color:gray;
+    }
+    input.form{
+    	width:40%;
+    }
+    
+    p{
+    	margin:3px;
+    }
+    table {
+        border-collapse: collapse;
+        font-size: 12px;
+        table-layout: fixed;
+        width:90%;
+        background-color:white;
+        border-color:gray;
+    }
+    th, tr {
+        border: solid gray 0;
+        height:30px;
+        padding:10px;
+        text-align:left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        border-width: 0.1px 0;
+        color:gray;
+    }
+    td{
+    	padding:10px 10px;
+    }
+
+    .Likes{
+    	color:gray;
+    }
+
+    .Replies{
+    	color:gray;
+    }
+
+    .Retweets{
+    	color:gray;
+    }
+
+    button.switch {
+    	padding: 10px;
+    	border: none;
+    	margin: 0;
+    	background-color: white;
+    }
+    button.switch.active {
+    	background-color: #f3f3ff;
+    	color: #00BFFF;
+    }
+
+    
+    button.page{
+    	width:30px;
+    	height:30px;
+    	margin: 20px 0px;
+    }
+    button.page:hover {
+    	background-color:#00BFFF;
+    	color: white;
+    	width:30px;
+    	height:30px;
+    }
+
+    div.search {
+    	width: 200px;
+    }
+	.search {
+		position: relative;
+	}
+	.search input {
+		width: 100%;
+		padding: 7px;
+	}
+	.search .fa-search { 
+		position: absolute;
+	    top: 9px;
+	    font-size: 12px;
+	    right: 8px;
+	}
+
+    </style>
+
+</head>
+
+<body>
+	<div class="button">
+
+	<button class="switch {% if mode == 'hashtag' %}active{% endif %}" onclick="javascript:window.location='/hashtags/{{ name }}'; return false;">Hashtag search</button>
+	<button class="switch {% if mode == 'user' %}active{% endif %}"  onclick="javascript:window.location='/users/{{ name }}'; return false;">User search</button>
+
+<div class="HashtagSearch">
+
+	<div class="form">
+	    <p>{{ mode|title }} search</p>
+<!-- 
+		<form action="http://127.0.0.1:8000/" method="get">
+			<input name="Hashtag" type="text" placeholder="Search by {{ mode }}" + background-image: url('searchicon.png');>
+		</form>
+	 -->
+		<form onsubmit="javascript:window.location = '/{{ mode }}s/' + this.search.value + window.location.search; return false;">
+			<div class="search">
+				<input type="text" name= "search" class="search" placeholder="Search by {{ mode }}">
+				<span class="fa fa-search"></span>
+			</div>
+		</form>
+
+	<div class="table">	
+		<table>
+
+			<tr>
+				<th>Tweet</th>
+				<th>Likes</th>
+				<th>Replies</th>
+				<th>Retweets</th>
+				<th>Hashtags</th>
+				<th>Date</th>
+			</tr>
+		{% for tweet in tweets %}
+			<tr>
+			<td>
+			<div class="tweet">
+			{{ tweet.text }}</div>
+			
+			<td>
+			<div class="Likes">
+			{%if tweet.favorite_count > 0 %}
+				{{tweet.favorite_count}}
+			{%else%}
+				<p>-</p>
+			{%endif%}
+			</div>
+			
+			<td>
+			<div class="Replies">
+			{%if tweet.reply_count > 0 %}
+				{{tweet.reply_count}}
+			{%else%}
+				<p>-</p>
+			{%endif%}
+			</div>
+		
+			<td>
+			<div class="Retweets">
+			{%if tweet.retweet_count > 0 %}
+				{{tweet.retweet_count}}
+			{%else%}
+				<p>-</p>
+			{%endif%}
+			
+			<td>
+			<div class="Hashtags">
+				{%if tweet.hashtags|length == 0 %}
+				-
+				{%else%}
+					{% for hashtag in tweet.hashtags|slice:":2" %}
+						#{{ hashtag.text }}
+					{% endfor %}
+					{%if tweet.hashtags|length > 2 %} ...{% endif %}
+				{%endif%}
+			</div>
+		
+			<td>
+			<div class="Date">{{ tweet.created_at }}</div>
+			</tr>
+
+	{% endfor %}
+		</table>	
+		<div class ="page">
+			{% for b in buttons %}
+				<button class="page" onClick="javascript:document.location=document.location.origin + document.location.pathname+'?start={{ b.start }}&end={{ b.end }}';">{{ b.page }}</button>
+			
+			{% endfor %}
+		</div>
+			

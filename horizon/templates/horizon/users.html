@@ -1,0 +1,149 @@
+
+{% include "index.html" %}
+
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="index2.css"/>
+
+	<style type="text/css">
+    body {
+        font-family: Helvetica;
+        font-size: 9pt;
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin:80px 40px;
+        background-color: #f0f0f0;
+        
+    }
+
+    div.button {
+    	height:30px;
+    	background-color: #f0f0f0;
+    	border: none;
+    }
+    .button:hover{
+    	color:blue;
+    }
+    div.HashtagSearch {
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        padding: 10px;
+        margin: 2px;
+        background-color: white;
+    }
+
+    div.form {
+    	color:#e6e6e6;
+    	
+    }
+    table {
+        border-collapse: collapse;
+        font-size: 12px;
+        table-layout: fixed;
+        width:80%;
+    }
+    th, tr {
+        border: solid gray 0;
+        height:30px;
+        padding:10px;
+        text-align:left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        border-width: 0.1px 0;
+    }
+    tr:last-child {
+        border-width: 0 0 1px;
+        color:gray;
+    }
+
+    td{
+    	padding:5px 5px;
+    }
+
+    .Likes{
+    	color:gray;
+    }
+
+    .Replies{
+    	color:gray;
+    }
+
+    div.page{
+    	padding:30px 30px;
+    }
+    .page:hover{
+    	background-color: blue;
+    }
+    </style>
+
+</head>
+
+<body>
+	
+    <button onclick="location.href='http://127.0.0.1:8000/users/'type="button">
+     www.example.com</button>
+	
+    <form action ="http://127.0.0.1:8000/users/">
+        <input type="button" value="Jump">User search
+    </form>
+	
+
+<div class="UserSearch">
+
+	<div class="form">
+	    <p>{{ mode }}search</p>
+		<form action="http://127.0.0.1:8000/" method="get">
+			<input name="User" type="text" placeholder="Search by {{mode}}">
+			<i class="fa fa-user icon"></i>
+		</form>
+	
+		<table>
+
+			<tr>
+				<th>tweet</th>
+				<th>Likes</th>
+				<th>Replies</th>
+				<th>Retweets</th>
+				<th>Hashtags</th>
+				<th>Date</th>
+			</tr>
+		{% for tweet in tweets %}
+			<tr>
+			<td>
+			<div class="tweet">{{ tweet.text }}</div>
+			
+			<td>
+			<div class="Likes">{% if tweet.favourites_count == 0%}
+                <p>-</p>
+                {% else %}
+                {{tweet.favourites_count}}
+            {% endif %}</div>
+
+			<td>
+			<div class="Replies">{{tweet.reply_count}}</div>
+		
+			<td>
+			<div class="Retweets">{{tweet.retweet_count}}</div>
+			
+			<td>
+			<div class="Hashtags">
+				{% for hashtag in tweet.hashtags %}
+					#{{ hashtag.text }}
+				{% endfor %}
+			</div>
+		
+			<td>
+			<div class="Date">{{ tweet.created_at }}</div>
+			</tr>
+
+	{% endfor %}
+		</table>	
+		<div class="page">
+			{% for b in buttons %}
+				<button onClick="javascript:document.location=document.location.origin + document.location.pathname+'?start={{ b.start }}&end={{ b.end }}';">{{ b.page }}</button>
+			{% endfor %}
+				<button>></button>
+			}
