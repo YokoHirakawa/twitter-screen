@@ -7,6 +7,24 @@ from django.urls import include, path
 
 import requests
 
+def make_button(
+	num_tweets = 100,
+	num_page = 10,
+	page = 1):
+	buttons = []
+		# Make buttons for pagination
+	for start in range(0,num_tweets,num_page):
+		button = {
+			"start": start,
+			"end": start+num_page,
+			"page": page
+		}
+		buttons.append(button)
+		page += 1
+		
+	return buttons
+
+
 def users(request,name):
 	print(name)
 
@@ -20,19 +38,8 @@ def users(request,name):
 	
 	results = response.json()
 
-	num_tweets = 100
-	num_page = 10
-	page = 1
-	buttons = []
-	# Make buttons for pagination
-	for start in range(0,num_tweets,num_page):
-		button = {
-			"start": start,
-			"end": start+num_page,
-			"page": page
-		}
-		buttons.append(button)
-		page += 1
+	
+	mybuttons = make_button()
 
 	# buttons = [
 	# 	{
@@ -57,7 +64,7 @@ def users(request,name):
 		"tweets": results,
 		"start": start,
 		"end": end,
-		"buttons": buttons,
+		"buttons": mybuttons,
 		"name": name,
 		"mode": "user"
 
@@ -76,25 +83,13 @@ def hashtags(request,name):
 	
 	results = response.json()
 
-	num_tweets = 100
-	num_page = 10
-	page = 1
-	buttons = []
-	# Make buttons for pagination
-	for start in range(0,num_tweets,num_page):
-		button = {
-			"start": start,
-			"end": start+num_page,
-			"page": page
-		}
-		buttons.append(button)
-		page += 1
+	mybuttons = make_button()
 
 	context = {
 		"tweets": results,
 		"start": start,
 		"end": end,
-		"buttons": buttons,
+		"buttons": mybuttons,
 		"name": name,
 		"mode": "hashtag"
 
